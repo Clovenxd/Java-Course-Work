@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class JTVDownload {
-/*
+
     public static void main(String[] args){
         String[][] shows = { //2D String array to hold TV shows and description
                             {"Rick 'n Morty", "Mr. Robot", "Dexter", "Avatar The Last Airbender", "Squid Games"},
@@ -13,7 +13,6 @@ public class JTVDownload {
         chooseShow(shows); //get user choice in show.
     }
 
- */
 
     public static void chooseShow(String[][] a){
         Scanner in = new Scanner(System.in); //get input for choice
