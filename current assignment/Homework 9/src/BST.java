@@ -22,40 +22,42 @@ public class BST {
   }
 
   public static BST insert(BST T, char L) {
-    if (T == null)
-      return new BST(L);
-    if (L < T.key)
-      T.left = insert(T.left, L);
-    else if (L > T.key)
-      T.right = insert(T.right, L);
-    return T;
+    if (T == null) //if the root node is empty create new node
+      return new BST(L); //return the first root node
+    if (L < T.key) //if the tree is not empty but the inserted node is smaller than the root
+      T.left = insert(T.left, L); //set new root node as the left child
+    else if (L > T.key) //if the tree is not empty and the inserted node is larger than the root node go right
+      T.right = insert(T.right, L);//set new root node as the right child
+    return T; //return the tree
     }
   
   public static BST delete(BST T, char L) {
-    if(T == null) {
-      return T; //tree is empty
+    if(T == null) {//tree is empty
+      return T;
     }else if(L < T.key){ //recursively go down left branch
       T.left = delete(T.left, L);
     }else if(L > T.key){ //recursively go down right branch
       T.right = delete(T.right, L);
-    }else{
-
+    }else if(L == T.key){ //L = T.key
+      if(T.left == null){ // if no left child
+        return T.right;
+      }else if(T.right == null){ //if no right child
+        return T.left;
+      }else{ //if both children take inorder successor on the right.
+        BST successor = find(T.right, inOrder(T.right).charAt(0));
+        T.key = successor.key;
+        T.right = delete(T.right, T.key);
+      }
     }
-
-
-
-
-
     return T;
  }
   
   
   public static void levelOrder(BST T) {
-     System.out.print("Level-Order: ");
-     System.out.println("<empty>");
+    if (T != null) {
 
+    }
   }
-
   public static String display(BST T){
     if(T != null){
       return Character.toString(T.key) + display(T.left) + display(T.right);
@@ -65,16 +67,32 @@ public class BST {
 
   public static String inOrder(BST T){
     if(T != null){
-      inOrder(T.left); //go left
-      System.out.print(T.key); //print current key
-      inOrder(T.right); //go right
+      return inOrder(T.left) + T.key + inOrder(T.right);
     }
     return "";
+  }
+
+  public static int height(BST T){
+    int lHeight = 0, rHeight = 0; //get height of tree to determine which level we are on
+
+    if(T == null){ //if current node is null return 0
+      return 0;
+    }else{ //go down both sides of tree
+      lHeight = height(T.left);
+      rHeight = height(T.right);
+    }
+    if(lHeight > rHeight){ //add the amount of levels for each branch of the tree.
+      return lHeight + 1;
+    }else{
+      return rHeight + 1;
+    }
   }
 
 
 public static void main(String[] args) {
     BST tree = null;
+    String ordered = "";
+    int added = 0;
 
     Scanner input = new Scanner(System.in);
     String stream = input.nextLine();
@@ -84,13 +102,20 @@ public static void main(String[] args) {
       if(Character.isAlphabetic(stream.charAt(i)) && Character.isUpperCase(stream.charAt(i))){
         if(find(tree, stream.charAt(i)) == null){
             tree = insert(tree, stream.charAt(i));
+            added++;
+        }else{
+          tree = delete(tree, stream.charAt(i));
+          added--;
         }
       }
     }
-
+    System.out.print("Level-Order: ");
+    if(added == 0){
+      System.out.print("<empty>");
+    }
     levelOrder(tree);
-    System.out.println(display(tree)); //debugging making sure tree stores proper data.
-  System.out.println(inOrder(tree));
+    System.out.println();
+
 
 }
 
@@ -109,10 +134,12 @@ class MyQueue {
   
   public QNode front;
   public QNode rear;
+  public int size;
   
   public MyQueue() {
     front = null;
     rear = null;
+    size = 0;
   }
   
   public void enqueue(char c) {
@@ -122,6 +149,7 @@ class MyQueue {
     else
       rear.next = temp;
     rear = temp;
+    size++;
   }
   
   public QNode dequeue() {
@@ -130,6 +158,7 @@ class MyQueue {
       temp  = front;
       front = front.next;
     }
+    size--;
     return temp;
   } 
 }
